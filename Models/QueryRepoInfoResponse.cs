@@ -1,3 +1,5 @@
+using Octokit;
+
 namespace GithubAPICSharp.Models;
 
 public record QueryRepoInfoResponse()
@@ -10,4 +12,7 @@ public record QueryRepoInfoResponse()
     public string Language { get; init; } = "";
 
     public List<string> Tags { get; init; } = [];
+
+    public override String ToString() => $"\tOwner:{Username}\n\tRepo:{RepoName}\n\tStars:{Stars}\n\tIssues:{Issues}\n\tLanguage:{Language}";
+    
 }
