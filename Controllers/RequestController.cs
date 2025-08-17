@@ -28,22 +28,26 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
          if (repo.Archived) tags.Add("Is Archived");
          if (repo.Fork) tags.Add("Is Fork");
          if (repo.HasDownloads) tags.Add("Has Downloads");
+         
          var output = new QueryRepoInfoResponse
          {
             RepoName = repo.Name,
+            Description = repo.Description,
+            License = repo.License.Name,
+            DataCreated = repo.CreatedAt.ToString(),
             Stars = repo.StargazersCount,
             Username = repo.Owner.Login, 
             Issues = repo.OpenIssuesCount,
             Language = repo.Language,
             Tags = tags 
          };
+         
          logger.LogInformation("Output:\n {Output}", output);
          return Ok(output);
       }
       catch (Exception e)
       {
          logger.LogError("Error: {EMessage}", e.Message);
-
          return BadRequest();
       }
    }
@@ -52,7 +56,6 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
    {
       if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || !uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase)) return (null, null)!;
       var segments = uri.Segments;
-      
       var owner = segments[1].Trim('/');
       var name = segments[2].Trim('/');
       return (owner, name);
