@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using GithubAPICSharp.Models;
 using Octokit; 
@@ -18,16 +17,27 @@ public class RequestController(ILogger<RequestController> logger) : ControllerBa
       
       try
       {
-         logger.LogInformation("Received command:\n {Context}", request);
+         logger.LogInformation("Request:\n {Request}", request);
          var (owner, name) = ParseGitHubUrl(QueryRepoInfoRequest.Url);
          var repo = await _github.Repository.Get(owner, name);
+         if (repo == null) return NotFound();
+         
+         List<string> tags = [];
+         
+         if (repo.IsTemplate) tags.Add("Is Template");
+         if (repo.Archived) tags.Add("Is Archived");
+         if (repo.Fork) tags.Add("Is Fork");
+         if (repo.HasDownloads) tags.Add("Has Downloads");
+         if (repo.HasIssues) tags.Add("Has Issues");
 
          return Ok(new QueryRepoInfoResponse
          {
             RepoName = repo.Name,
             Stars = repo.StargazersCount,
             Username = owner, 
-            Language = repo.Language
+            Issues = repo.OpenIssuesCount,
+            Language = repo.Language,
+            Tags = tags
          });
       }
       catch (Exception e)
