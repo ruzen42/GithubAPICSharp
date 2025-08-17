@@ -1,5 +1,7 @@
+using System.Runtime.InteropServices.JavaScript;
 using Microsoft.AspNetCore.Mvc;
-using GithubAPICSharp.Models;
+using GithubAPICSharp.Models.QueryRepoInfo;
+using GithubAPICSharp.Models.UserInfo;
 using Octokit; 
 
 namespace GithubAPICSharp.Controllers;
@@ -18,8 +20,9 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
       
       try
       {
-         logger.LogInformation("Request:\n {Request}", request.Url);
-         var (owner, name) = ParseGitHubUrl(request.Url);
+         logger.LogInformation("Request: {Request}", request.Url);
+         
+         var (owner, name) = request.ParseGitHubUrl();
          var repo = await _github.Repository.Get(owner, name);
          if (repo == null) return NotFound();
          
@@ -40,7 +43,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
             Username = repo.Owner.Login, 
             Issues = repo.OpenIssuesCount,
             Language = repo.Language,
-            Tags = tags 
+            Tags = tags
          };
          
          logger.LogInformation("Output:\n {Output}", output);
@@ -48,25 +51,24 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
       }
       catch (Exception e)
       {
-         logger.LogError("Error: {EMessage}", e.Message);
+         logger.LogError("Error: {EMessage}", e);
          return BadRequest();
       }
    }
 
    [HttpPost("getuser")]
-   public async Task<IActionResult> GetUser([FromBody] QueryRepoInfoRequest request)
+   public async Task<IActionResult> GetUser([FromBody] QueryUserInfoRequest request)
    {
       if (string.IsNullOrEmpty(request.Url))
          return BadRequest("Url is empty");
+      
       try
       {
          logger.LogInformation("Request:\n {Request}", request.Url);
-         var (owner, _) = ParseGitHubUrl(request.Url);
-         var user = await _github.User.Get(owner);
+         var user = await _github.User.Get(request.ParseGitHubUrl());
          if (user == null) return NotFound("not found");
          
          List<string> tags = [];
-         
          if (user.SiteAdmin) tags.Add("Is Admin");
          if (user.Suspended) tags.Add("Is Suspend");
 
@@ -78,7 +80,6 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
             DataCreated = user.CreatedAt.ToString(), 
             ReposCount = user.PublicRepos + user.OwnedPrivateRepos,
             Followers = user.Followers, 
-            DiskUsage = user.DiskUsage ?? 0,
             Tags = tags 
          };
          
@@ -88,16 +89,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
       catch (Exception e)
       {
          logger.LogError("Error: {EMessage}", e.Message);
-         return BadRequest();
+         return BadRequest(); 
       }
-   }
-
-   private static (string owner, string name) ParseGitHubUrl(string url)
-   {
-      if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || !uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase)) return (null, null)!;
-      var segments = uri.Segments;
-      var owner = segments[1].Trim('/');
-      var name = segments[2].Trim('/');
-      return (owner, name);
    }
 }

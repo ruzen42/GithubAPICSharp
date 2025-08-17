@@ -15,5 +15,6 @@ RUN dotnet publish "./GithubAPICSharp.csproj" -o /app/publish
 
 FROM base AS final
 WORKDIR /app
+ARG ASPNETCORE_ENVIRONMENT="Development"
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "./GithubAPICSharp.dll"]

@@ -1,17 +1,15 @@
-using Octokit;
+namespace GithubAPICSharp.Models.QueryRepoInfo;
 
-namespace GithubAPICSharp.Models;
-
-public record QueryRepoInfoResponse
+public record struct QueryRepoInfoResponse()
 {
     public string Username { get; init; } = null!;
     public string RepoName { get; init; } = null!;
     public string Description { get; init; } = null!;
     public string DataCreated { get; init; } = null!;
     public string License { get; init; } = null!;
-    public int Stars { get; init; }
-    
-    public int Issues { get; init; }
+    public int Stars { get; init; } = 0;
+
+    public int Issues { get; init; } = 0;
     public string Language { get; init; } = null!;
     public List<string> Tags { get; init; } = null!;
 
