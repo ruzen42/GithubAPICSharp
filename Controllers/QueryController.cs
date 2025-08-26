@@ -23,7 +23,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
          logger.LogInformation("Request: {Request}", request.Url);
          
          var (owner, name) = request.ParseGitHubUrl();
-         var repo = await _github.Repository.Get(owner, name);
+         var repo = await _github.Repository.Get(owner, name)!;
          if (repo == null) return NotFound();
          
          List<string> tags = [];
@@ -37,7 +37,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
          {
             RepoName = repo.Name,
             Description = repo.Description,
-            License = repo.License.Name,
+            License = repo.License.Name + " " + repo.License.Url,
             DataCreated = repo.CreatedAt.ToString(),
             Stars = repo.StargazersCount,
             Username = repo.Owner.Login, 
