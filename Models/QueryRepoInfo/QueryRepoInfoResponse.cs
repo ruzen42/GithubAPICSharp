@@ -1,6 +1,6 @@
 namespace GithubAPICSharp.Models.QueryRepoInfo;
 
-public record struct QueryRepoInfoResponse()
+public readonly record struct QueryRepoInfoResponse()
 {
     public string Username { get; init; } = null!;
     public string RepoName { get; init; } = null!;

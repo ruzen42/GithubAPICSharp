@@ -1,6 +1,6 @@
 namespace GithubAPICSharp.Models.UserInfo;
 
-public record struct QueryUserInfoResponse()
+public readonly record struct QueryUserInfoResponse()
 {
     public string Username { get; init; } = null!;
     public string Bio { get; init; } = null!;

@@ -2,8 +2,10 @@ using NeoSimpleLogger;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.ClearProviders();
-builder.Logging.AddProvider(new LoggerProvider());
+builder.Logging
+    .ClearProviders()
+    .AddProvider(new LoggerProvider());
+
 builder.Services.AddControllers();
 var app = builder.Build();
 
