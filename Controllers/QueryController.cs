@@ -26,7 +26,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
          var repo = await _github.Repository.Get(owner, name)!;
          if (repo == null) return NotFound();
          
-         List<string> tags = [];
+         List<string> tags = ["NormalUser"];
          
          if (repo.IsTemplate) tags.Add("Is Template");
          if (repo.Archived) tags.Add("Is Archived");
