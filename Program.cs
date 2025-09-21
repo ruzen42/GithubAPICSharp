@@ -10,6 +10,6 @@ builder.Services.AddControllers();
 var app = builder.Build();
 
 app.MapControllers();
-app.MapGet("/", () => "use POST request \n.../api/query/getrepo");
+app.MapGet("/", () => "use POST request \n.../api/query/get-repo");
 
 app.Run();

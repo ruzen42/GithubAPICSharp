@@ -66,9 +66,9 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
       {
          logger.LogInformation("Request:\n {Request}", request.Url);
          var user = await _github.User.Get(ParseGitHubUrlUser(request.Url));
-         if (user == null) return BadRequest("not found");
+         if (user == null) return BadRequest("Not found");
          
-         List<string> tags = [];
+         List<string> tags = ["IsNormal"];
          if (user.SiteAdmin) tags.Add("Is Admin");
          if (user.Suspended) tags.Add("Is Suspend");
 
@@ -78,11 +78,10 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
             Bio = user.Bio,
             Email = user.Email,
             DataCreated = user.CreatedAt.ToString(), 
-            ReposCount = user.PublicRepos + user.OwnedPrivateRepos,
+            ReposCount = user.PublicRepos + user.TotalPrivateRepos,
             Followers = user.Followers, 
             Tags = tags 
          };
-         
          logger.LogInformation("Output:\n {Output}", output);
          return Ok(output);
       }
