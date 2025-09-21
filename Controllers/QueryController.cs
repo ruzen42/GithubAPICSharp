@@ -24,7 +24,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
          
          var (owner, name) = ParseGitHubUrlRepo(request.Url); 
          var repo = await _github.Repository.Get(owner, name)!;
-         if (repo == null) return NotFound();
+         if (repo == null) return BadRequest();
          
          List<string> tags = ["NormalUser"];
          
@@ -66,7 +66,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
       {
          logger.LogInformation("Request:\n {Request}", request.Url);
          var user = await _github.User.Get(ParseGitHubUrlUser(request.Url));
-         if (user == null) return NotFound("not found");
+         if (user == null) return BadRequest("not found");
          
          List<string> tags = [];
          if (user.SiteAdmin) tags.Add("Is Admin");
