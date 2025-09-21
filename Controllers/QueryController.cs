@@ -22,7 +22,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
       {
          logger.LogInformation("Request: {Request}", request.Url);
          
-         var (owner, name) = request.ParseGitHubUrl();
+         var (owner, name) = ParseGitHubUrlRepo(request.Url); 
          var repo = await _github.Repository.Get(owner, name)!;
          if (repo == null) return NotFound();
          
@@ -65,7 +65,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
       try
       {
          logger.LogInformation("Request:\n {Request}", request.Url);
-         var user = await _github.User.Get(request.ParseGitHubUrl());
+         var user = await _github.User.Get(ParseGitHubUrlUser(request.Url));
          if (user == null) return NotFound("not found");
          
          List<string> tags = [];
@@ -91,5 +91,23 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
          logger.LogError("Error: {EMessage}", e.Message);
          return BadRequest(); 
       }
+   }
+   
+   public string ParseGitHubUrlUser(string url)
+   {
+      if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
+          !uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase)) return null!;
+      var segments = uri.Segments;
+      var owner = segments[0].Trim('/');
+      return owner;
+   }
+   
+   public (string owner, string name) ParseGitHubUrlRepo(string url)
+   {
+      if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || !uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase)) return (null!, null!);
+      var segments = uri.Segments;
+      var owner = segments[1].Trim('/');
+      var name = segments[2].Trim('/');
+      return (owner, name);
    }
 }
