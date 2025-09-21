@@ -1,9 +1,7 @@
 namespace GithubAPICSharp.Models.UserInfo;
 
-public record struct QueryUserInfoRequest
+public readonly record struct QueryUserInfoRequest(string Url)
 {
-    public required string Url {get; set;}
-
     public string ParseGitHubUrl()
     {
         if (!Uri.TryCreate(Url, UriKind.Absolute, out var uri) ||
