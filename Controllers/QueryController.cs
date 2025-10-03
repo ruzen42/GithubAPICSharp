@@ -12,7 +12,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
 {
    private readonly GitHubClient _github = new(ProductHeaderValue.Parse("RuzenBot"));
    
-   [HttpPost]
+   [HttpPost("repo")]
    public async Task<IActionResult> GetRepo([FromBody] QueryRepoInfoRequest request)
    {
       if (string.IsNullOrEmpty(request.Url))
@@ -56,7 +56,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
       }
    }
 
-   [HttpPost]
+   [HttpPost("user")]
    public async Task<IActionResult> GetUser([FromBody] QueryUserInfoRequest request)
    {
       if (string.IsNullOrEmpty(request.Url))
