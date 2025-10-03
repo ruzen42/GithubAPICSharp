@@ -7,12 +7,12 @@ using Octokit;
 namespace GithubAPICSharp.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/")]
 public class QueryController(ILogger<QueryController> logger) : ControllerBase
 {
    private readonly GitHubClient _github = new(ProductHeaderValue.Parse("RuzenBot"));
    
-   [HttpPost("get-repo")]
+   [HttpPost]
    public async Task<IActionResult> GetRepo([FromBody] QueryRepoInfoRequest request)
    {
       if (string.IsNullOrEmpty(request.Url))
@@ -56,7 +56,7 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
       }
    }
 
-   [HttpPost("get-user")]
+   [HttpPost]
    public async Task<IActionResult> GetUser([FromBody] QueryUserInfoRequest request)
    {
       if (string.IsNullOrEmpty(request.Url))
