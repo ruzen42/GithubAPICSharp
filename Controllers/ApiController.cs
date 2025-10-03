@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices.JavaScript;
 using Microsoft.AspNetCore.Mvc;
 using GithubAPICSharp.Models.QueryRepoInfo;
 using GithubAPICSharp.Models.UserInfo;
@@ -7,13 +6,13 @@ using Octokit;
 namespace GithubAPICSharp.Controllers;
 
 [ApiController]
-[Route("api/")]
-public class QueryController(ILogger<QueryController> logger) : ControllerBase
+[Route("api")]
+public class ApiController(ILogger<ApiController> logger) : ControllerBase
 {
    private readonly GitHubClient _github = new(ProductHeaderValue.Parse("RuzenBot"));
    
-   [HttpPost("repo")]
-   public async Task<IActionResult> GetRepo([FromBody] QueryRepoInfoRequest request)
+   [HttpGet("repo")]
+   public async Task<IActionResult> GetRepo([FromQuery] QueryRepoInfoRequest request)
    {
       if (string.IsNullOrEmpty(request.Url))
          return BadRequest("Url is empty");
@@ -56,8 +55,8 @@ public class QueryController(ILogger<QueryController> logger) : ControllerBase
       }
    }
 
-   [HttpPost("user")]
-   public async Task<IActionResult> GetUser([FromBody] QueryUserInfoRequest request)
+   [HttpGet("user")]
+   public async Task<IActionResult> GetUser([FromQuery] QueryUserInfoRequest request)
    {
       if (string.IsNullOrEmpty(request.Url))
          return BadRequest("Url is empty");
