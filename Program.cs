@@ -6,10 +6,17 @@ builder.Logging
     .ClearProviders()
     .AddProvider(new LoggerProvider());
 
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddControllers();
 var app = builder.Build();
 
-app.MapControllers();
-app.MapGet("/", () => "use POST request \n.../api/query/get-repo");
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-app.Run();
+app.MapControllers();
+
+await app.RunAsync();
