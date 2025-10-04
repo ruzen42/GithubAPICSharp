@@ -1,6 +1,6 @@
 namespace GithubAPICSharp.Models;
 
-public record QueryUserInfoRequest(string Url);
+public record QueryUserInfoRequest(string Username);
 
 public record QueryUserInfoResponse(
     string Username,
@@ -12,7 +12,7 @@ public record QueryUserInfoResponse(
     List<string> Tags = null!
 );
 
-public record QueryRepoInfoRequest(string Url);
+public record QueryRepoInfoRequest(string User, string Repo);
 
 public record QueryRepoInfoResponse(
     string Username,

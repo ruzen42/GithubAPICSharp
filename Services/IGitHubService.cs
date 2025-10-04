@@ -4,6 +4,6 @@ namespace GithubAPICSharp.Services;
 
 public interface IGitHubService
 {
-    Task<QueryRepoInfoResponse> GetRepoInfoAsync(string url);
-    Task<QueryUserInfoResponse> GetUserInfoAsync(string url);
+    Task<QueryRepoInfoResponse> GetRepoInfoAsync(string user, string repo);
+    Task<QueryUserInfoResponse> GetUserInfoAsync(string user);
 }

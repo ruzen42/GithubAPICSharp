@@ -12,15 +12,16 @@ public class ApiController(ILogger<ApiController> logger, IGitHubService githubS
    [HttpGet("repo")]
    public async Task<IActionResult> GetRepo([FromQuery] QueryRepoInfoRequest request)
    {
-      var url = request.Url;
-      if (string.IsNullOrEmpty(url))
+      var user = request.User;
+      var repo = request.Repo;
+      if (string.IsNullOrEmpty(request.Repo) ||  string.IsNullOrEmpty(user))
          return BadRequest("Url is empty");
       
       try
       {
-         logger.LogInformation("Request: {Request}", url);
+         logger.LogInformation("Request: {Request}", request);
 
-         var output = await githubService.GetRepoInfoAsync(url); 
+         var output = await githubService.GetRepoInfoAsync(user, repo); 
          logger.LogInformation("Output:\n {Output}", output);
          return Ok(output);
       }
@@ -42,7 +43,7 @@ public class ApiController(ILogger<ApiController> logger, IGitHubService githubS
    [HttpGet("user")]
    public async Task<IActionResult> GetUser([FromQuery] QueryUserInfoRequest request)
    {
-      var url = request.Url;
+      var url = request.Username;
       if (string.IsNullOrEmpty(url))
          return BadRequest("Url is empty");
       
