@@ -11,13 +11,6 @@ public class GitHubService(GitHubClient githubClient) : IGitHubService
     {
         var repository = await githubClient.Repository.Get(user, repo);
         
-        var tags = new List<string> { "Normal" };
-         
-        if (repository.IsTemplate) tags.Add("Is Template");
-        if (repository.Archived) tags.Add("Is Archived");
-        if (repository.Fork) tags.Add("Is Fork");
-        if (repository.HasDownloads) tags.Add("Has Downloads");
-        
         var output = new QueryRepoInfoResponse(
             Username: repository.Owner.Login,
             RepoName: repository.Name,
@@ -26,8 +19,7 @@ public class GitHubService(GitHubClient githubClient) : IGitHubService
             License: repository.License != null ? $"{repository.License.Name} {repository.License.Url}" : "No License",
             Stars: repository.StargazersCount,
             Issues: repository.OpenIssuesCount,
-            Language: repository.Language ?? "Unknown",
-            Tags: tags
+            Language: repository.Language ?? "Unknown"
         );
         
         return output;
@@ -36,9 +28,6 @@ public class GitHubService(GitHubClient githubClient) : IGitHubService
     public async Task<QueryUserInfoResponse> GetUserInfoAsync(string username)
     {
         var user = await githubClient.User.Get(username);
-
-        List<string> tags = ["IsNormal"];
-        if (user.SiteAdmin) tags.Add("Is Admin");
         
         var output = new QueryUserInfoResponse(
             Username: user.Login, 
@@ -46,8 +35,7 @@ public class GitHubService(GitHubClient githubClient) : IGitHubService
             Email: user.Email ?? string.Empty,
             DataCreated: user.CreatedAt.ToString(), 
             ReposCount: user.PublicRepos + user.TotalPrivateRepos,
-            Followers: user.Followers, 
-            Tags: tags 
+            Followers: user.Followers
         );
         
         return output;

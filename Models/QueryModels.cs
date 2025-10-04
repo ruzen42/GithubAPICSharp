@@ -8,8 +8,7 @@ public record QueryUserInfoResponse(
     string Email,
     string DataCreated,
     int ReposCount = 0,
-    int Followers = 0,
-    List<string> Tags = null!
+    int Followers = 0
 );
 
 public record QueryRepoInfoRequest(string User, string Repo);
@@ -22,6 +21,5 @@ public record QueryRepoInfoResponse(
     string License,
     int Stars = 0,
     int Issues = 0,
-    string Language = null!,
-    List<string> Tags = null!
+    string Language = null!
 );
