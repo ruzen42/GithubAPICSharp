@@ -43,7 +43,7 @@ public class ApiController(ILogger<ApiController> logger, IGitHubService githubS
    [HttpGet("user")]
    public async Task<IActionResult> GetUser([FromQuery] QueryUserInfoRequest request)
    {
-      var url = request.Username;
+      var url = request.User;
       if (string.IsNullOrEmpty(url))
          return BadRequest("Url is empty");
       

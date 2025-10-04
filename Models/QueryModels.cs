@@ -1,6 +1,6 @@
 namespace GithubAPICSharp.Models;
 
-public record QueryUserInfoRequest(string Username);
+public record QueryUserInfoRequest(string User);
 
 public record QueryUserInfoResponse(
     string Username,
